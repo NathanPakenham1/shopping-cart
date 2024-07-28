@@ -39,7 +39,12 @@ session_start(); // Ensure the session is started
                                     <td>" . ($key + 1) . "</td>
                                     <td>{$value['Item_Name']}</td>
                                     <td>{$value['Price']} <input type='hidden' class='iprice' value='{$value['Price']}'></td>
-                                    <td><input class='form-control iquantity' onchange='subTotal()' type='number' value='{$value['Quantity']}' min='1' max='10'></td>
+                                    <td>
+                                        <form action='manage_cart.php' method='post'>
+                                        <input name='Mod_Quantity' class='form-control iquantity' onchange='this.form.submit();' type='number' value='{$value['Quantity']}' min='1' max='10'>
+                                        <input type='hidden' name='Item_Name' value='{$value['Item_Name']}'>
+                                        </form>
+                                    </td>
                                     <td class='itotal'>" . ($value['Price'] * $value['Quantity']) . "</td>
                                     <td>
                                     <form action='manage_cart.php' method='post'>
@@ -61,16 +66,36 @@ session_start(); // Ensure the session is started
                         <h3 class="card-title">Total:</h3>
                         <h5 class="card-text" id="grandTotal"><?php echo $total; ?></h5>
                         <br>
-                        <form action="">
+                        <?php
+                        if(isset($_SESSION['cart']) && count($_SESSION  ['cart']) > 0) {
+                        ?>
+                        <form action="purchase.php" method="post">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input name="full_name" type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input name="phone_no" type="number" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input name="address" type="text" class="form-control">
+                            </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                <input class="form-check-input" type="radio" name="pay_mode" value="COD" id="flexRadioDefault1">
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     Cash On Delivery
                                 </label>
                             </div>
                             <br>
-                            <button class="btn btn-primary btn-block">Make Purchase</button>
+                            <button class="btn btn-primary btn-block" name="purchase">Make Purchase</button>
                         </form>
+                        <?php
+                        }
+
+
+                        ?>
                     </div>
                 </div>
             </div>
